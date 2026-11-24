@@ -6,10 +6,14 @@ import { Provider } from "@/components/ui/provider";
 import "./index.css";
 import App from "./App.jsx";
 
+import { ColorModeProvider } from "./components/ui/color-mode";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider>
-      <App />
+      <ColorModeProvider>
+        <App />
+      </ColorModeProvider>
     </Provider>
   </StrictMode>,
 );
