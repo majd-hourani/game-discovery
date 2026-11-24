@@ -1,4 +1,5 @@
 import apiClient from "@/services/apiClient";
+import { CanceledError } from "axios";
 import { useEffect, useState } from "react";
 
 function useGames() {
@@ -6,16 +7,24 @@ function useGames() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function fetchGames() {
       try {
-        const response = await apiClient.get("/games");
+        const response = await apiClient.get("/games", {
+          signal: controller.signal,
+        });
+
         setGames(response.data.results);
       } catch (err) {
+        if (err instanceof CanceledError) return;
         setError(err.message);
       }
     }
 
     fetchGames();
+
+    return () => controller.abort();
   }, []);
 
   return { games, error };
